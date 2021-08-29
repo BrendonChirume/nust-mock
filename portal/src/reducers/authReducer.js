@@ -2,7 +2,7 @@ import types from '../actions/actionTypes';
 
 const initialState = {
   authStatus: true,
-  errorDetails: false
+  errorDetails: false,
 };
 
 export default function authReducer(state = initialState, actions = {}) {
@@ -15,6 +15,7 @@ export default function authReducer(state = initialState, actions = {}) {
       return { ...state, authStatus: false, errorDetails: true };
     case types.REMOVE_ERRORS_ONCHANGE:
       return { ...state, errorDetails: false };
-    default: return state;
+    default:
+      return state;
   }
 }

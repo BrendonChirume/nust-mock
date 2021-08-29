@@ -1,18 +1,16 @@
 import actionTypes from './actionTypes';
 
 const initialCredentials = {
-  username: 'brenDon',
+  studentID: 'chirume',
   position: 'pharmacist',
-  password: 'chirume',
+  password: 'biwQi0-tizjip-zuvcis',
 };
 
 export function signIn(credentials, cb) {
   return (dispatch) => {
     if (
-      initialCredentials.username.toLowerCase().trimEnd() ===
-        credentials.username.toLowerCase().trimEnd() &&
-      initialCredentials.position.toLowerCase() ===
-        credentials.position.toLowerCase() &&
+      initialCredentials.studentID.toLowerCase().trimEnd() ===
+        credentials.studentID.toLowerCase().trimEnd() &&
       initialCredentials.password === credentials.password.trimEnd()
     ) {
       dispatch({ type: actionTypes.LOGIN_SUCCESS });

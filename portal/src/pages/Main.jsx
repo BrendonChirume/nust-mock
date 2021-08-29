@@ -1,212 +1,249 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
+import { Badge, styled, useTheme } from '@material-ui/core';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Divider from '@material-ui/core/Divider';
-import Drawer from '@material-ui/core/Drawer';
 import IconButton from '@material-ui/core/IconButton';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import MenuIcon from '@material-ui/icons/Menu';
-import Toolbar from '@material-ui/core/Toolbar';
+import Toolbar, { toolbarClasses } from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { NavLink, Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
-import { Button, ListItemIcon, styled } from '@material-ui/core';
-import Home from './Home';
-import ExamResults from './ExamResults';
-import LogoutIcon from '@material-ui/icons/Logout';
+import { useHistory } from 'react-router-dom';
+import MuiAppBar from '@material-ui/core/AppBar';
+import MuiDrawer from '@material-ui/core/Drawer';
+import MainRoutes from '../containers/MainRoutes';
+import UserPopover from '../components/main/UserPopover';
+import { connect } from 'react-redux';
+import { signOut } from '../actions/authActions';
+import DrawerContent from '../components/main/DrawerContent';
+import { MoreVert, Notifications } from '@material-ui/icons';
 
-const drawerWidth = 240;
-const PREFIX = 'Main';
-const classes = {
-  logout: `${PREFIX}-logout`,
-  listItem: `${PREFIX}-listitem`,
-  listItemIcon: `${PREFIX}-listItemIcon`,
-  listItemLink: `${PREFIX}-listItemLink`,
-};
+const openedMixin = (theme) => ({
+  width: drawerWidth,
+  transition: theme.transitions.create('width', {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.enteringScreen,
+  }),
+  color: theme.palette.text.primary,
+  backgroundColor:
+    theme.palette.mode === 'dark'
+      ? theme.palette.background.appBar
+      : theme.palette.background.paper,
+  overflowX: 'hidden',
+});
 
-const Root = styled(Box)(({ theme }) => ({
-  [`& .${classes.listItem}`]: {
-    padding: 0,
-    '& > a': {
-      padding: theme.spacing(1, 2),
-      display: 'flex',
-      alignItems: 'center',
-      width: '100%',
-    },
+const closedMixin = (theme) => ({
+  transition: theme.transitions.create('width', {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  color: theme.palette.text.primary,
+  backgroundColor:
+    theme.palette.mode === 'dark'
+      ? theme.palette.background.appBar
+      : theme.palette.background.paper,
+  overflowX: 'hidden',
+  width: `calc(${theme.spacing(7)} + 1px)`,
+  [theme.breakpoints.down('sm')]: {
+    width: 0,
   },
-  [`& .${classes.listItemIcon}`]: {
-    [theme.breakpoints.down('xl')]: {
-      minWidth: 40,
-      paddingLeft: theme.spacing(0.5),
-    },
+  [theme.breakpoints.up('sm')]: {
+    width: `calc(${theme.spacing(9)} + 1px)`,
   },
-  [`& .${classes.logout}`]: {
-    position: 'sticky',
-    bottom: theme.spacing(2),
-  },
-  [`& .${classes.listItemLink}`]: {
-    padding: theme.spacing(1, 2),
+});
+
+const NavBar = styled(MuiAppBar, {
+  shouldForwardProp: (prop) => prop !== 'open',
+})(({ theme, open, isMobile }) => ({
+  zIndex: theme.zIndex.drawer + 1,
+  backgroundColor: 'rgb(32 46 60)',
+  [`& .${toolbarClasses.root}`]: {
     display: 'flex',
-    alignItems: 'center',
     width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      justifyContent: 'space-between',
+    },
+    [theme.breakpoints.down('sm')]: {
+      justifyContent: 'space-between',
+      flexDirection: 'initial',
+    },
   },
+  transition: theme.transitions.create(['width', 'margin'], {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  ...(open &&
+    !isMobile && {
+      marginLeft: drawerWidth,
+      backgroundColor: 'rgb(32 46 60)',
+      width: `calc(100% - ${drawerWidth}px)`,
+      transition: theme.transitions.create(['width', 'margin'], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    }),
 }));
 
-function Main(props) {
-  const { window } = props;
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const { path } = useRouteMatch();
+const BrowserDrawer = styled(MuiDrawer, {
+  shouldForwardProp: (prop) => prop !== 'open',
+})(({ theme, open }) => ({
+  width: drawerWidth,
+  flexShrink: 0,
+  whiteSpace: 'nowrap',
+  boxSizing: 'border-box',
+  ...(open && {
+    ...openedMixin(theme),
+    '& .MuiDrawer-paper': openedMixin(theme),
+  }),
+  ...(!open && {
+    ...closedMixin(theme),
+    '& .MuiDrawer-paper': closedMixin(theme),
+  }),
+}));
+
+const drawerWidth = 240;
+const Main = (props) => {
+  const { ColorModeContext, unAuthenticate } = props;
+  const [open, setOpen] = React.useState(false);
+  const [page, setPage] = React.useState('');
   const history = useHistory();
+  const theme = useTheme();
+  const colorMode = React.useContext(ColorModeContext);
+  const [width, setWidth] = React.useState();
+  React.useEffect(() => {
+    window.addEventListener('resize', () => setWidth(window.innerWidth));
+    return () => {
+      window.removeEventListener('resize', () => {});
+    };
+  }, []);
+
+  const isMobile = width <= 768;
 
   const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
+    setOpen(!open);
   };
 
-  const options = [
-    {
-      page: 'Dashboard',
-      href: `/dashboard`,
-    },
-    {
-      page: 'New Registration',
-      href: `/new-reg`,
-    },
-    {
-      page: 'Examination Results',
-      href: `/exam-results`,
-    },
-    {
-      page: 'Time Table',
-      href: `/time-table`,
-    },
-    {
-      page: 'E-learning',
-      href: `/e-learning`,
-    },
-    {
-      page: 'Settings',
-      href: `/settings`,
-    },
-  ];
-
-  const drawer = (
-    <div>
-      <Toolbar />
-      <Divider />
-      <List>
-        {options.map((opt) => (
-          <ListItem className={classes.listItem} button key={opt.href}>
-            <NavLink className={classes.listItemLink + ' a-cancel'} to={opt.href}>
-              <ListItemText primary={opt.page} />
-            </NavLink>
-          </ListItem>
-        ))}
-      </List>
-    </div>
-  );
-
-  const container = window !== undefined ? () => window().document.body : undefined;
+  const handleSignOut = () => {
+    unAuthenticate(() => () => history.push('/login'));
+  };
+  const handlePageChange = (pg) => setPage(pg);
 
   return (
-    <Root sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar
-        position="fixed"
-        sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
-        }}
-      >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: 'none' } }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" fontWeight="bold" noWrap component="div">
-            NUST STUDENT PORTAL
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Box
-        component="nav"
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-        aria-label="mailbox folders"
-      >
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-        <Drawer
-          container={container}
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}
-          sx={{
-            display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-          }}
-        >
-          {drawer}
-          <ListItem className={classes.logout} button>
-            <ListItemIcon className={classes.listItemIcon}>
-              <LogoutIcon />
-            </ListItemIcon>
-            <ListItemText primary="Logout" />
-          </ListItem>
-        </Drawer>
-        <Drawer
-          variant="permanent"
-          sx={{
-            display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-          }}
-          open
-        >
-          {drawer}
-          <ListItem className={classes.logout} button>
-            <ListItemIcon className={classes.listItemIcon}>
-              <LogoutIcon />
-            </ListItemIcon>
-            <ListItemText primary="Logout" />
-          </ListItem>
-        </Drawer>
-      </Box>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <Toolbar />
-        <Switch>
-          <Route exact path={path} component={Home} />
-          <Route path={`/exam-results`} component={ExamResults} />
-
-          <Route path="*">
-            <Box className="center">
-              <Typography variant="h4">Page Not Found (-_-)</Typography>
-              <Box pt={3}>
-                <Button variant="contained" onClick={history.goBack}>
-                  Go Back
-                </Button>
-              </Box>
+      <NavBar position="fixed" open={open}>
+        {isMobile ? (
+          <Toolbar>
+            <Typography variant="h6" noWrap component="div">
+              {page}
+            </Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+              <IconButton sx={{ mx: { xs: 2 } }} color="inherit">
+                <Badge color="secondary" badgeContent={0} showZero>
+                  <Notifications />
+                </Badge>
+              </IconButton>{' '}
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                onClick={handleDrawerToggle}
+              >
+                {open ? <MoreVert /> : <MenuIcon />}
+              </IconButton>
             </Box>
-          </Route>
-        </Switch>
+          </Toolbar>
+        ) : (
+          <Toolbar>
+            <Box
+              sx={{
+                display: 'flex',
+                whiteSpace: 'nowrap',
+                alignItems: 'center',
+                color: 'text.primary',
+              }}
+            >
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                sx={{ mr: { md: 3 } }}
+                onClick={handleDrawerToggle}
+              >
+                {open ? <MoreVert /> : <MenuIcon />}
+              </IconButton>
+              <Typography variant="h6" noWrap component="div">
+                {page}
+              </Typography>
+            </Box>
+            <Box display="flex">
+              {isMobile ? <UserPopover /> : undefined}
+              <IconButton color="inherit">
+                <Badge color="secondary" badgeContent={0} showZero>
+                  <Notifications />
+                </Badge>
+              </IconButton>{' '}
+            </Box>
+          </Toolbar>
+        )}
+      </NavBar>
+      <Box component="nav" aria-label="mailbox folders">
+        {isMobile ? (
+          <MuiDrawer
+            variant="temporary"
+            open={open}
+            onClose={handleDrawerToggle}
+            ModalProps={{
+              keepMounted: true, // Better open performance on mobile.
+            }}
+            sx={{
+              zIndex: theme.zIndex.drawer + 2,
+              '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            }}
+          >
+            <DrawerContent
+              isMobile={isMobile}
+              open={open}
+              colorMode={colorMode}
+              handleSignOut={handleSignOut}
+              handlePageChange={handlePageChange}
+            />
+          </MuiDrawer>
+        ) : (
+          <BrowserDrawer variant="permanent" open={open}>
+            <DrawerContent
+              isMobile={isMobile}
+              open={open}
+              colorMode={colorMode}
+              handleSignOut={handleSignOut}
+              handlePageChange={handlePageChange}
+            />
+          </BrowserDrawer>
+        )}
       </Box>
-    </Root>
+      <Box
+        component="main"
+        sx={{ height: '100%', width: '100%', flexGrow: 1, p: 2 }}
+      >
+        <Toolbar />
+        <MainRoutes />
+      </Box>
+    </Box>
   );
-}
-
-Main.propTypes = {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
-  window: PropTypes.func,
 };
 
-export default Main;
+Main.propTypes = {
+  unAuthenticate: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = () => ({});
+
+const mapDispatchToProps = {
+  unAuthenticate: signOut,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Main);

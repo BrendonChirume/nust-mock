@@ -1,16 +1,17 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Box, Button, Typography } from '@material-ui/core';
 import Main from '../pages/Main';
 import Login from '../pages/Login';
 import AuthRoute from './AuthRoute';
 
-function Routes() {
+function Routes({ ColorModeContext }) {
   return (
     <Router>
       <Switch>
-        <AuthRoute path="/" component={Main} />
-        <Route path="/login" component={Login} />
+        <AuthRoute path="/" ColorModeContext={ColorModeContext} component={Main} />
+        <Route exact path="/login" component={Login} />
         <Route path="*">
           <div className="center">
             <Box pb={2}>
@@ -25,5 +26,9 @@ function Routes() {
     </Router>
   );
 }
+
+Routes.propTypes = {
+  ColorModeContext: PropTypes.shape({}).isRequired,
+};
 
 export default Routes;

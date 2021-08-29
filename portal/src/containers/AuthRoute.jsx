@@ -4,11 +4,16 @@ import { Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 const AuthRoute = ({ component: Component, authStatus = true, ...rest }) => {
+  const { ColorModeContext, ...other } = rest;
   return (
     <Route
-      {...rest}
+      {...other}
       render={(props) =>
-        authStatus ? <Component {...props} /> : <Redirect to="/login" />
+        authStatus ? (
+          <Component {...props} ColorModeContext={ColorModeContext} />
+        ) : (
+          <Redirect to="/login" />
+        )
       }
     />
   );
