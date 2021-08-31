@@ -6,10 +6,6 @@ export function viewpatientsDetails(paylod) {
 export function handleModal(payload) {
   return { type: types.SHOW_MODAL, payload };
 }
-export function showModal(...params) {
-  return { type: 'ALERT_BAR', payload: params };
-}
-
 // ? triggers actions in ElementsHoc
 export function toggleAction(payload) {
   return { type: types.TOGGLE_ACTION, payload };

@@ -9,6 +9,10 @@ import ELearn from '../pages/ELearn';
 import ExamResults from '../pages/ExamResults';
 import ContinuousAssesment from '../pages/ContinuousAssesment';
 import Profile from '../pages/Profile';
+import Library from '../pages/Library';
+import Notices from '../pages/Notices';
+import Accomodation from '../pages/Accomodation';
+import Payments from '../pages/Payments';
 
 export default function MainRoutes() {
   const { path } = useRouteMatch();
@@ -18,6 +22,10 @@ export default function MainRoutes() {
       <Route exact path={path} component={Profile} />
       <Route path={`/exam-results`} component={ExamResults} />
       <Route path={`/new-reg`} component={Registration} />
+      <Route path={`/library`} component={Library} />
+      <Route path={`/notices`} component={Notices} />
+      <Route path={`/payments`} component={Payments} />
+      <Route path={`/accomodation`} component={Accomodation} />
       <Route path={`/continuous-asses`} component={ContinuousAssesment} />
       <Route path={`/dashboard`} component={DashBoard} />
       <Route path={`/time-table`} component={TimeTable} />

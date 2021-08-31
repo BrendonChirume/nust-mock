@@ -67,7 +67,7 @@ const Root = styled(Box)(({ theme }) => ({
       width: '100%',
     },
     padding: theme.spacing(7, 0, 2),
-    backgroundColor: '#f9f9f9',
+    backgroundColor: theme.palette.mode === 'dark' ? '#222b36' : '#f9f9f9',
     borderRadius: theme.shape.borderRadius,
     display: 'flex',
     flexDirection: 'column',

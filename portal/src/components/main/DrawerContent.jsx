@@ -6,23 +6,25 @@ import {
   ListItemIcon,
   ListItemText,
   Avatar,
-  useTheme,
+  ListItemButton,
 } from '@material-ui/core';
 import LightTooltip from './LightTooltip';
 import Logout from '@material-ui/icons/Logout';
 import { Box, styled } from '@material-ui/system';
 import {
+  Announcement,
   Assessment,
-  Brightness4,
-  Brightness7,
   Dashboard,
   History,
+  Home,
   HowToReg,
   LibraryBooks,
+  LocalLibrary,
+  Payment,
   Person,
   School,
 } from '@material-ui/icons';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
 
 const DrawerHeader = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'open',
@@ -35,7 +37,6 @@ const DrawerHeader = styled(Box, {
 }));
 const PREFIX = 'Main';
 const classes = {
-  logout: `${PREFIX}-logout`,
   drawer: `${PREFIX}-drawer`,
   list: `${PREFIX}-list`,
   toolbar: `${PREFIX}-toolbar`,
@@ -44,8 +45,14 @@ const classes = {
   listItemLink: `${PREFIX}-listItemLink`,
 };
 const Root = styled(Box)(({ theme }) => ({
+  [`&.${classes.root}`]: {
+    height: '100%',
+  },
   [`& .${classes.listItem}`]: {
     padding: 0,
+    '&.Mui-selected': {
+      backgroundColor: '#0178bc',
+    },
     '& > a': {
       padding: theme.spacing(1, 2),
       display: 'flex',
@@ -54,20 +61,11 @@ const Root = styled(Box)(({ theme }) => ({
       color: theme.palette.text.primary,
     },
   },
-  [`& .${classes.list}`]: {
-    height: '100%',
-  },
   [`& .${classes.listItemIcon}`]: {
     [theme.breakpoints.up('md')]: {
-      minWidth: 57,
+      minWidth: 50,
       color: theme.palette.text.primary,
-      paddingLeft: theme.spacing(0.8),
-      marginLeft: theme.spacing(0.3),
     },
-  },
-  [`& .${classes.logout}`]: {
-    position: 'sticky',
-    bottom: theme.spacing(2),
   },
   [`& .${classes.toolbar}`]: {
     justifyContent: 'space-between',
@@ -84,52 +82,75 @@ const Root = styled(Box)(({ theme }) => ({
     width: '100%',
   },
 }));
-const DrawerContent = ({
-  handlePageChange,
-  handleSignOut,
-  colorMode,
-  open,
-  isMobile,
-}) => {
-  const theme = useTheme();
 
-  const options = [
-    {
-      page: 'Profile',
-      href: '/',
-      icon: Person,
-    },
-    {
-      page: 'Dashboard',
-      href: '/dashboard',
-      icon: Dashboard,
-    },
-    {
-      page: 'New Registration',
-      href: '/new-reg',
-      icon: HowToReg,
-    },
-    {
-      page: 'Continuous Assesment',
-      href: '/continuous-asses',
-      icon: Assessment,
-    },
-    {
-      page: 'Examination Results',
-      href: '/exam-results',
-      icon: LibraryBooks,
-    },
-    {
-      page: 'Time Table',
-      href: '/time-table',
-      icon: History,
-    },
-    {
-      page: 'E-learning',
-      href: '/e-learning',
-      icon: School,
-    },
-  ];
+const options = [
+  {
+    page: 'Profile',
+    href: '/',
+    icon: Person,
+  },
+  {
+    page: 'Dashboard',
+    href: '/dashboard',
+    icon: Dashboard,
+  },
+  {
+    page: 'Payments',
+    href: '/payments',
+    icon: Payment,
+  },
+  {
+    page: 'New Registration',
+    href: '/new-reg',
+    icon: HowToReg,
+  },
+  {
+    page: 'Continuous Assesment',
+    href: '/continuous-asses',
+    icon: Assessment,
+  },
+  {
+    page: 'Examination Results',
+    href: '/exam-results',
+    icon: LibraryBooks,
+  },
+  {
+    page: 'Time Table',
+    href: '/time-table',
+    icon: History,
+  },
+  {
+    page: 'Libray',
+    href: '/library',
+    icon: LocalLibrary,
+  },
+  {
+    page: 'E-learning',
+    href: '/e-learning',
+    icon: School,
+  },
+  {
+    page: 'Accomodation',
+    href: '/accomodation',
+    icon: Home,
+  },
+  {
+    page: 'Notices',
+    href: '/notices',
+    icon: Announcement,
+  },
+];
+const DrawerContent = ({ handlePageChange, handleSignOut, open, isMobile }) => {
+  const history = useHistory();
+  const { pathname } = history.location;
+  const [selectedIndex, setSelectedIndex] = React.useState('');
+
+  const handleClick = (page, selected) => {
+    handlePageChange(page);
+    setSelectedIndex(selected);
+  };
+
+  React.useEffect(() => setSelectedIndex(pathname), [pathname]);
   return (
     <Root>
       <DrawerHeader sx={{ margin: '0 auto' }}>
@@ -146,21 +167,18 @@ const DrawerContent = ({
       </DrawerHeader>
       <Divider />
       <List className={classes.list}>
-        {options.map((opt) => {
+        {options.map((opt, index) => {
           const Icon = opt.icon;
           return (
             <LightTooltip
               key={opt.href}
               placement="right"
-              xs={{
-                display: { sm: 'none', md: 'block' },
-              }}
               title={!isMobile && open ? '' : opt.page}
             >
-              <ListItem
+              <ListItemButton
+                selected={selectedIndex === opt.href}
                 className={classes.listItem}
-                button
-                onClick={() => handlePageChange(opt.page)}
+                onClick={() => handleClick(opt.page, opt.href)}
               >
                 <NavLink
                   className={classes.listItemLink + ' a-cancel'}
@@ -171,23 +189,16 @@ const DrawerContent = ({
                   </ListItemIcon>
                   <ListItemText primary={opt.page} />
                 </NavLink>
-              </ListItem>
+              </ListItemButton>
             </LightTooltip>
           );
         })}
-        <ListItem className={classes.logout} button onClick={handleSignOut}>
+        <ListItem onClick={handleSignOut}>
           <ListItemIcon className={classes.listItemIcon}>
             <Logout />
           </ListItemIcon>
           <ListItemText primary="Logout" />
         </ListItem>
-        <Box sx={{ position: 'sticky', bottom: 0, mb: 1, width: '100%' }}>
-          <ListItem button onClick={colorMode.toggleColorMode}>
-            <ListItemIcon className={classes.listItemIcon}>
-              {theme.palette.mode === 'dark' ? <Brightness7 /> : <Brightness4 />}
-            </ListItemIcon>
-          </ListItem>
-        </Box>
       </List>
     </Root>
   );

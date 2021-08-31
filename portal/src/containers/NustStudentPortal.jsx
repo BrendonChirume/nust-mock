@@ -1,10 +1,19 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { createTheme, ThemeProvider, useMediaQuery } from '@material-ui/core';
+import { connect } from 'react-redux';
 import Routes from './Routes';
+import ErrorBoundary from './ErrorBoundary';
+import DisplayUtilities from './DisplayUtilities';
+// import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
+import { handleModal } from '../actions/actionCreator';
+import { BrowserRouter as Router } from 'react-router-dom';
+// import { LocalizationProvider } from '@material-ui/lab';
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
 
-export default function NustStudentPortal() {
+const NustStudentPortal = (props) => {
+  const { toggleModal, modalData } = props;
   const [mode, setMode] = React.useState(
     useMediaQuery('(prefers-color-scheme: dark)')
   );
@@ -25,20 +34,42 @@ export default function NustStudentPortal() {
             main: '#0a1929',
           },
           secondary: {
-            main: '#202e3c',
+            main: '#0178bc',
           },
           background: {
-            paper: '#0a1929',
+            paper: '#222b36',
           },
         },
       }),
     [mode]
   );
   return (
-    <ColorModeContext.Provider value={colorMode}>
-      <ThemeProvider theme={theme}>
-        <Routes ColorModeContext={ColorModeContext} />
-      </ThemeProvider>
-    </ColorModeContext.Provider>
+    <Router>
+      <ErrorBoundary>
+        <ColorModeContext.Provider value={colorMode}>
+          <ThemeProvider theme={theme}>
+            {/* <LocalizationProvider dateAdapter={AdapterDateFns}> */}
+            <Routes ColorModeContext={ColorModeContext} />
+            <DisplayUtilities handleModal={toggleModal} modalData={modalData} />
+            {/* </LocalizationProvider> */}
+          </ThemeProvider>
+        </ColorModeContext.Provider>
+      </ErrorBoundary>
+    </Router>
   );
-}
+};
+
+const mapDispatchToProps = {
+  toggleModal: handleModal,
+};
+
+const mapStateToProps = ({ modalData }) => ({ modalData });
+
+NustStudentPortal.propTypes = {
+  modalData: PropTypes.shape({
+    show: PropTypes.string,
+  }).isRequired,
+  toggleModal: PropTypes.func.isRequired,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(NustStudentPortal);

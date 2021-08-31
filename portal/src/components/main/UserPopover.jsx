@@ -1,9 +1,19 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import Popover from '@material-ui/core/Popover';
-import Typography from '@material-ui/core/Typography';
-import { Avatar, IconButton } from '@material-ui/core';
+import {
+  Avatar,
+  Divider,
+  IconButton,
+  List,
+  ListItemButton,
+  ListItemText,
+  styled,
+  Typography,
+} from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
-export default function UserPopover({ trigger }) {
+export default function UserPopover({ signOut }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event) => {
@@ -16,6 +26,18 @@ export default function UserPopover({ trigger }) {
 
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
+
+  const PREFIX = 'popper';
+  const classes = {
+    link: `${PREFIX}-link`,
+  };
+  const Anchor = styled(Link)(({ theme }) => ({
+    textDecoration: 'none',
+    color: theme.palette.text.primary,
+    display: 'block',
+    width: '100%',
+    padding: theme.spacing(0.25, 8, 0.25, 2),
+  }));
 
   return (
     <>
@@ -42,8 +64,30 @@ export default function UserPopover({ trigger }) {
           horizontal: 'left',
         }}
       >
-        <Typography sx={{ p: 2 }}>The content of the Popover.</Typography>
+        <Typography variant="body1" sx={{ p: 2, minWidth: 210 }}>
+          Brendon Chirume
+        </Typography>
+        <Divider />
+        <List dense>
+          <ListItemButton sx={{ px: 0 }}>
+            <Anchor to="/" className={classes.link}>
+              <ListItemText primary="Profile" />
+            </Anchor>
+          </ListItemButton>
+          <ListItemButton sx={{ px: 0 }}>
+            <Anchor to="/settings">
+              <ListItemText primary="Settings" />
+            </Anchor>
+          </ListItemButton>
+          <ListItemButton sx={{ pr: { md: 5 } }} onClick={signOut}>
+            <ListItemText primary="Logout" />
+          </ListItemButton>
+        </List>
       </Popover>
     </>
   );
 }
+
+UserPopover.propTypes = {
+  signOut: PropTypes.func.isRequired,
+};

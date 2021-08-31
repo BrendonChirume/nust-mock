@@ -1,21 +1,17 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Box from '@material-ui/core/Box';
-import { Badge, styled, useTheme } from '@material-ui/core';
+import { styled, useTheme } from '@material-ui/core';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar, { toolbarClasses } from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import { useHistory } from 'react-router-dom';
 import MuiAppBar from '@material-ui/core/AppBar';
 import MuiDrawer from '@material-ui/core/Drawer';
 import MainRoutes from '../containers/MainRoutes';
-import UserPopover from '../components/main/UserPopover';
 import { connect } from 'react-redux';
 import { signOut } from '../actions/authActions';
 import DrawerContent from '../components/main/DrawerContent';
-import { MoreVert, Notifications } from '@material-ui/icons';
+import NavContent from '../components/main/NavContent';
 
 const openedMixin = (theme) => ({
   width: drawerWidth,
@@ -42,12 +38,12 @@ const closedMixin = (theme) => ({
       ? theme.palette.background.appBar
       : theme.palette.background.paper,
   overflowX: 'hidden',
-  width: `calc(${theme.spacing(7)} + 1px)`,
+  width: `calc(${theme.spacing(6)} + 1px)`,
   [theme.breakpoints.down('sm')]: {
     width: 0,
   },
   [theme.breakpoints.up('sm')]: {
-    width: `calc(${theme.spacing(9)} + 1px)`,
+    width: `calc(${theme.spacing(8)} + 1px)`,
   },
 });
 
@@ -63,8 +59,8 @@ const NavBar = styled(MuiAppBar, {
       justifyContent: 'space-between',
     },
     [theme.breakpoints.down('sm')]: {
-      justifyContent: 'space-between',
-      flexDirection: 'initial',
+      justifyContent: 'flex-start',
+      flexDirection: 'row-reverse',
     },
   },
   transition: theme.transitions.create(['width', 'margin'], {
@@ -90,6 +86,20 @@ const BrowserDrawer = styled(MuiDrawer, {
   flexShrink: 0,
   whiteSpace: 'nowrap',
   boxSizing: 'border-box',
+  '& ::-webkit-scrollbar': {
+    width: '0.45rem',
+  },
+  '& ::-webkit-scrollbar-thumb': {
+    backgroundColor: 'transparent',
+    borderRadius: '0.5rem',
+    height: 400,
+  },
+  '& :hover::-webkit-scrollbar-thumb': {
+    backgroundColor: '#c1c1c1',
+  },
+  '& ::-webkit-scrollbar-track': {
+    backgroundColor: 'transparent',
+  },
   ...(open && {
     ...openedMixin(theme),
     '& .MuiDrawer-paper': openedMixin(theme),
@@ -100,15 +110,30 @@ const BrowserDrawer = styled(MuiDrawer, {
   }),
 }));
 
-const drawerWidth = 240;
+const drawerWidth = 250;
+const options = {
+  '/': 'Profile',
+  '/dashboard': 'Dashboard',
+  '/new-reg': 'New Registration',
+  '/continuous-asses': 'Continuous Assesment',
+  '/exam-results': 'Examination Results',
+  '/time-table': 'Time Table',
+  '/e-learning': 'E-learning',
+  '/library': 'Libray',
+  '/accomodation': 'Accomodation',
+  '/notices': 'Notices',
+  '/payments': 'Payments',
+};
+
 const Main = (props) => {
   const { ColorModeContext, unAuthenticate } = props;
   const [open, setOpen] = React.useState(false);
   const [page, setPage] = React.useState('');
   const history = useHistory();
+  const { pathname } = history.location;
   const theme = useTheme();
   const colorMode = React.useContext(ColorModeContext);
-  const [width, setWidth] = React.useState();
+  const [width, setWidth] = React.useState(window.innerWidth);
   React.useEffect(() => {
     window.addEventListener('resize', () => setWidth(window.innerWidth));
     return () => {
@@ -127,69 +152,18 @@ const Main = (props) => {
   };
   const handlePageChange = (pg) => setPage(pg);
 
+  React.useEffect(() => setPage(options[pathname]), [pathname]);
+
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <NavBar position="fixed" open={open}>
-        {isMobile ? (
-          <Toolbar>
-            <Typography variant="h6" noWrap component="div">
-              {page}
-            </Typography>
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-              }}
-            >
-              <IconButton sx={{ mx: { xs: 2 } }} color="inherit">
-                <Badge color="secondary" badgeContent={0} showZero>
-                  <Notifications />
-                </Badge>
-              </IconButton>{' '}
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                edge="start"
-                onClick={handleDrawerToggle}
-              >
-                {open ? <MoreVert /> : <MenuIcon />}
-              </IconButton>
-            </Box>
-          </Toolbar>
-        ) : (
-          <Toolbar>
-            <Box
-              sx={{
-                display: 'flex',
-                whiteSpace: 'nowrap',
-                alignItems: 'center',
-                color: 'text.primary',
-              }}
-            >
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                edge="start"
-                sx={{ mr: { md: 3 } }}
-                onClick={handleDrawerToggle}
-              >
-                {open ? <MoreVert /> : <MenuIcon />}
-              </IconButton>
-              <Typography variant="h6" noWrap component="div">
-                {page}
-              </Typography>
-            </Box>
-            <Box display="flex">
-              {isMobile ? <UserPopover /> : undefined}
-              <IconButton color="inherit">
-                <Badge color="secondary" badgeContent={0} showZero>
-                  <Notifications />
-                </Badge>
-              </IconButton>{' '}
-            </Box>
-          </Toolbar>
-        )}
+        <NavContent
+          open={open}
+          signOut={handleSignOut}
+          handleDrawerToggle={handleDrawerToggle}
+          page={page}
+        />
       </NavBar>
       <Box component="nav" aria-label="mailbox folders">
         {isMobile ? (
@@ -201,7 +175,7 @@ const Main = (props) => {
               keepMounted: true, // Better open performance on mobile.
             }}
             sx={{
-              zIndex: theme.zIndex.drawer + 2,
+              zIndex: theme.zIndex.tooltip,
               '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
             }}
           >
