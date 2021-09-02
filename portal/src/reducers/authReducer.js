@@ -1,19 +1,19 @@
-import types from '../actions/actionTypes';
+import actionTypes from '../actions/actionTypes';
 
 const initialState = {
-  authStatus: true,
+  authStatus: false,
   errorDetails: false,
 };
 
 export default function authReducer(state = initialState, actions = {}) {
   switch (actions.type) {
-    case types.LOGIN_SUCCESS:
+    case actionTypes.LOGIN_SUCCESS:
       return { ...state, authStatus: true };
-    case types.LOGIN_ERROR:
+    case actionTypes.LOGIN_ERROR:
       return { ...state, errorDetails: true };
-    case types.LOGOUT:
+    case actionTypes.LOGOUT:
       return { ...state, authStatus: false, errorDetails: true };
-    case types.REMOVE_ERRORS_ONCHANGE:
+    case actionTypes.REMOVE_ERRORS_ONCHANGE:
       return { ...state, errorDetails: false };
     default:
       return state;

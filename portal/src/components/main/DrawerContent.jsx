@@ -24,7 +24,7 @@ import {
   Person,
   School,
 } from '@material-ui/icons';
-import { NavLink, useHistory } from 'react-router-dom';
+import { NavLink, useHistory, useRouteMatch } from 'react-router-dom';
 
 const DrawerHeader = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'open',
@@ -83,68 +83,69 @@ const Root = styled(Box)(({ theme }) => ({
   },
 }));
 
-const options = [
-  {
-    page: 'Profile',
-    href: '/',
-    icon: Person,
-  },
-  {
-    page: 'Dashboard',
-    href: '/dashboard',
-    icon: Dashboard,
-  },
-  {
-    page: 'Payments',
-    href: '/payments',
-    icon: Payment,
-  },
-  {
-    page: 'New Registration',
-    href: '/new-reg',
-    icon: HowToReg,
-  },
-  {
-    page: 'Continuous Assesment',
-    href: '/continuous-asses',
-    icon: Assessment,
-  },
-  {
-    page: 'Examination Results',
-    href: '/exam-results',
-    icon: LibraryBooks,
-  },
-  {
-    page: 'Time Table',
-    href: '/time-table',
-    icon: History,
-  },
-  {
-    page: 'Libray',
-    href: '/library',
-    icon: LocalLibrary,
-  },
-  {
-    page: 'E-learning',
-    href: '/e-learning',
-    icon: School,
-  },
-  {
-    page: 'Accomodation',
-    href: '/accomodation',
-    icon: Home,
-  },
-  {
-    page: 'Notices',
-    href: '/notices',
-    icon: Announcement,
-  },
-];
 const DrawerContent = ({ handlePageChange, handleSignOut, open, isMobile }) => {
   const history = useHistory();
   const { pathname } = history.location;
   const [selectedIndex, setSelectedIndex] = React.useState('');
+  const { url } = useRouteMatch();
 
+  const options = [
+    {
+      page: 'Dashboard',
+      href: `${url}`,
+      icon: Dashboard,
+    },
+    {
+      page: 'Profile',
+      href: `${url}/profile`,
+      icon: Person,
+    },
+    {
+      page: 'Notices',
+      href: `${url}/notices`,
+      icon: Announcement,
+    },
+    {
+      page: 'Payments',
+      href: `${url}/payments`,
+      icon: Payment,
+    },
+    {
+      page: 'New Registration',
+      href: `${url}/new-reg`,
+      icon: HowToReg,
+    },
+    {
+      page: 'Continuous Assesment',
+      href: `${url}/continuous-asses`,
+      icon: Assessment,
+    },
+    {
+      page: 'Examination Results',
+      href: `${url}/exam-results`,
+      icon: LibraryBooks,
+    },
+    {
+      page: 'Time Table',
+      href: `${url}/time-table`,
+      icon: History,
+    },
+    {
+      page: 'Libray',
+      href: `${url}/library`,
+      icon: LocalLibrary,
+    },
+    {
+      page: 'E-learning',
+      href: `${url}/e-learning`,
+      icon: School,
+    },
+    {
+      page: 'Accomodation',
+      href: `${url}/accomodation`,
+      icon: Home,
+    },
+  ];
   const handleClick = (page, selected) => {
     handlePageChange(page);
     setSelectedIndex(selected);

@@ -1,19 +1,9 @@
 import types from './actionTypes';
 
-export function viewpatientsDetails(paylod) {
-  return { type: types.VIEW_patient_DETAILS, paylod };
-}
 export function handleModal(payload) {
   return { type: types.SHOW_MODAL, payload };
 }
-// ? triggers actions in ElementsHoc
-export function toggleAction(payload) {
-  return { type: types.TOGGLE_ACTION, payload };
-}
 
-export function cycleCountSearch(event, tableID) {
-  return { type: types.CYCLE_COUNT_ARRAY, tableID, event };
-}
 // function actionTypesEndsInSuccess(type) {
 //   return type.substring(type.length - 8) === '_SUCCESS';
 // }

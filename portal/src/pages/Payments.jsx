@@ -315,7 +315,7 @@ export default function Payments() {
     <Box>
       <Grid container spacing={3}>
         <Grid container item xs={12} spacing={3}>
-          <Grid item xs={12} md={3}>
+          <Grid item xs={12} md={4} lg={3}>
             <Box
               boxShadow={2}
               sx={{
@@ -406,7 +406,7 @@ export default function Payments() {
               </List>
             </Box>
           </Grid>
-          <Grid item xs={12} md={3}>
+          <Grid item xs={12} md={4} lg={3}>
             <Card sx={{ bgcolor: 'background.paper' }}>
               <CardContent>
                 <Typography sx={{ fontSize: 14 }} gutterBottom>
@@ -428,22 +428,22 @@ export default function Payments() {
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          <TableContainer component={Paper} sx={{ maxHeight: 450 }}>
-            <Toolbar
-              sx={{
-                pl: { sm: 2 },
-                pr: { xs: 1, sm: 1 },
-              }}
+          <Toolbar
+            sx={{
+              pl: { sm: 2 },
+              pr: { xs: 1, sm: 1 },
+            }}
+          >
+            <Typography
+              sx={{ flex: '1 1 100%', pt: 2, pb: 3 }}
+              variant="h6"
+              id="tableTitle"
+              component="div"
             >
-              <Typography
-                sx={{ flex: '1 1 100%', pt: 2, pb: 3 }}
-                variant="h6"
-                id="tableTitle"
-                component="div"
-              >
-                Fees Breakdown
-              </Typography>
-            </Toolbar>
+              Fees Breakdown
+            </Typography>
+          </Toolbar>
+          <TableContainer component={Paper} sx={{ maxHeight: 450 }}>
             <Table sx={{ minWidth: 650 }} stickyHeader>
               <TableHead>
                 <TableRow>

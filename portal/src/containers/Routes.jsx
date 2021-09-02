@@ -1,29 +1,35 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { Box, Button, Typography } from '@material-ui/core';
 import Main from '../pages/Main';
 import Login from '../pages/Login';
 import AuthRoute from './AuthRoute';
-
-function Routes({ ColorModeContext }) {
+// ! Do not change the order in the routes
+const Routes = ({ ColorModeContext }) => {
   return (
     <Switch>
-      <AuthRoute path="/" ColorModeContext={ColorModeContext} component={Main} />
-      <Route exact path="/login" component={Login} />
+      <Route path="/login" component={Login} />
+      <AuthRoute path="/main" ColorModeContext={ColorModeContext} component={Main} />
+      {/* new top level routes here!!  */}
+      <AuthRoute path="/" ColorModeContext={ColorModeContext}>
+        <Redirect to="/main" />
+      </AuthRoute>
       <Route path="*">
-        <div className="center">
+        <Box p={3}>
           <Box pb={2}>
-            <Typography variant="h3">Page Not Found (-_-)</Typography>
+            <Typography variant="h3" color="inherit">
+              Page Not Found (-_-)
+            </Typography>
           </Box>
           <Button variant="contained" onClick={() => window.history.back()}>
             Go Back
           </Button>
-        </div>
+        </Box>
       </Route>
     </Switch>
   );
-}
+};
 
 Routes.propTypes = {
   ColorModeContext: PropTypes.shape({}).isRequired,

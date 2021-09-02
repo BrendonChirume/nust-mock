@@ -9,19 +9,19 @@ import {
   DialogActions,
   Divider,
   Grid,
-  IconButton,
   TextField,
   Typography,
   useTheme,
 } from '@material-ui/core';
 import { connect } from 'react-redux';
-import { Create } from '@material-ui/icons';
 import { handleModal } from '../actions/actionCreator';
-import { MobileDatePicker } from '@material-ui/lab';
+import Course from '../components/profile/Course';
+import PersonalDetails from '../components/profile/PersonalDetails';
 
-export const Profile = (props) => {
+const tabs = ['Personal Details', 'Courses', 'Contact Details', 'Security'];
+
+const Profile = (props) => {
   const { toggleModal } = props;
-  const [dateValue, setDateValue] = React.useState(new Date());
   const [value, setValue] = React.useState(0);
   const theme = useTheme();
 
@@ -46,9 +46,9 @@ export const Profile = (props) => {
         }}
         scrollButtons="auto"
       >
-        <Tab label="Personal Details" />
-        <Tab label="Contact Details" />
-        <Tab label="Security" />
+        {tabs.map((tab) => (
+          <Tab key={tab} label={tab} />
+        ))}
       </Tabs>
       <TabPanel index={0}>
         <Grid container spacing={3}>
@@ -94,166 +94,13 @@ export const Profile = (props) => {
             </Box>
           </Grid>
           <Grid item xs={12} md={9}>
-            <Box
-              boxShadow={2}
-              sx={{
-                bgcolor: 'background.paper',
-                width: '100%',
-                borderRadius: 1,
-              }}
-            >
-              <Box
-                display="flex"
-                sx={{ px: 2, py: 1 }}
-                justifyContent="space-between"
-                alignItems="center"
-              >
-                <Typography variant="h6" component="div">
-                  Profile
-                </Typography>
-                <IconButton
-                  size="large"
-                  onClick={() =>
-                    toggleModal({
-                      show: 'modal',
-                      title: 'Edit Details',
-                      open: true,
-                      children: (
-                        <Grid component="form" container spacing={3}>
-                          <Grid item xs={12} md={6}>
-                            <TextField size="small" fullWidth label="Name" />
-                          </Grid>
-                          <Grid item xs={12} md={6}>
-                            <TextField size="small" fullWidth label="Surname" />
-                          </Grid>
-                          <Grid item xs={12} md={6}>
-                            {/* <MobileDatePicker
-                              label="Date of Birth"
-                              value={dateValue}
-                              onChange={(newValue) => {
-                                setDateValue(newValue);
-                              }}
-                              renderInput={(params) => <TextField {...params} />}
-                            />
-                            <MobileDatePicker
-                              label="For mobile"
-                              value={dateValue}
-                              onChange={(newValue) => {
-                                setDateValue(newValue);
-                              }}
-                              renderInput={(params) => <TextField {...params} />}
-                            /> */}
-                          </Grid>
-                          <Grid item xs={12} md={6}>
-                            <TextField size="small" fullWidth label="National ID" />
-                          </Grid>
-                          <Grid item xs={12} md={6}>
-                            <TextField size="small" fullWidth label="Gender" />
-                          </Grid>
-                          <Grid item xs={12} md={6}>
-                            <TextField size="small" fullWidth label="Religion" />
-                          </Grid>
-                          <Grid item xs={12} md={6}>
-                            <TextField
-                              size="small"
-                              fullWidth
-                              label="Marital Status"
-                            />
-                          </Grid>
-                          <Grid item xs={12} md={6}>
-                            <TextField size="small" fullWidth label="Citizenship" />
-                          </Grid>
-                          <Grid item xs={12} md={6}>
-                            <TextField
-                              size="small"
-                              fullWidth
-                              label="Place of Birth"
-                            />
-                          </Grid>
-                          <Grid item xs={12} md={6}>
-                            <TextField
-                              size="small"
-                              fullWidth
-                              label="Permanent Residence"
-                            />
-                          </Grid>
-                        </Grid>
-                      ),
-                    })
-                  }
-                >
-                  <Create />
-                </IconButton>
-              </Box>
-              <Divider />
-              <Grid container sx={{ p: 2 }}>
-                <Grid item xs={6} md={3}>
-                  Firstname(s) :
-                </Grid>
-                <Grid item xs={6} md={3}>
-                  Heather
-                </Grid>
-
-                <Grid item xs={6} md={3}>
-                  Surname:
-                </Grid>
-                <Grid item xs={6} md={3}>
-                  Bope
-                </Grid>
-                <Grid item xs={6} md={3}>
-                  Date of Birth:
-                </Grid>
-                <Grid item xs={6} md={3}>
-                  25 March 1997
-                </Grid>
-                <Grid item xs={6} md={3}>
-                  National ID:
-                </Grid>
-                <Grid item xs={6} md={3}>
-                  63-2128754-W-32
-                </Grid>
-                <Grid item xs={6} md={3}>
-                  Gender:
-                </Grid>
-                <Grid item xs={6} md={3}>
-                  Female
-                </Grid>
-                <Grid item xs={6} md={3}>
-                  Religion:
-                </Grid>
-                <Grid item xs={6} md={3}>
-                  --
-                </Grid>
-                <Grid item xs={6} md={3}>
-                  Marital Status:
-                </Grid>
-                <Grid item xs={6} md={3}>
-                  --
-                </Grid>
-                <Grid item xs={6} md={3}>
-                  Citizenship:
-                </Grid>
-                <Grid item xs={6} md={3}>
-                  Zimbabwe
-                </Grid>
-                <Grid item xs={6} md={3}>
-                  Place of Birth:
-                </Grid>
-                <Grid item xs={6} md={3}>
-                  Harare
-                </Grid>
-                <Grid item xs={6} md={3}>
-                  Permanent Residence:
-                </Grid>
-                <Grid item xs={6} md={3}>
-                  Zimbabwe
-                </Grid>
-              </Grid>
-            </Box>
+            <PersonalDetails toggleModal={toggleModal} />
           </Grid>
         </Grid>
       </TabPanel>
-      <TabPanel index={1}>Item Two</TabPanel>
+      <TabPanel index={1}>
+        <Course />
+      </TabPanel>
       <TabPanel index={2}>
         <Box
           component="form"

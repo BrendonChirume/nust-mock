@@ -5,10 +5,9 @@ import { connect } from 'react-redux';
 import Routes from './Routes';
 import ErrorBoundary from './ErrorBoundary';
 import DisplayUtilities from './DisplayUtilities';
-// import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import { handleModal } from '../actions/actionCreator';
 import { BrowserRouter as Router } from 'react-router-dom';
-// import { LocalizationProvider } from '@material-ui/lab';
+import { blue } from '@material-ui/core/colors';
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
 
@@ -34,7 +33,7 @@ const NustStudentPortal = (props) => {
             main: '#0a1929',
           },
           secondary: {
-            main: '#0178bc',
+            main: blue[700],
           },
           background: {
             paper: '#222b36',
@@ -48,10 +47,8 @@ const NustStudentPortal = (props) => {
       <ErrorBoundary>
         <ColorModeContext.Provider value={colorMode}>
           <ThemeProvider theme={theme}>
-            {/* <LocalizationProvider dateAdapter={AdapterDateFns}> */}
             <Routes ColorModeContext={ColorModeContext} />
             <DisplayUtilities handleModal={toggleModal} modalData={modalData} />
-            {/* </LocalizationProvider> */}
           </ThemeProvider>
         </ColorModeContext.Provider>
       </ErrorBoundary>

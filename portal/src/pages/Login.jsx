@@ -1,29 +1,18 @@
 import * as React from 'react';
-import {
-  Button,
-  Avatar,
-  Box,
-  TextField,
-  styled,
-  IconButton,
-  Grid,
-} from '@material-ui/core';
-import { Link, Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
+import { Avatar, Box, styled } from '@material-ui/core';
+import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { clearErrors, signIn } from '../actions/authActions';
-import { ArrowBack, Visibility, VisibilityOff } from '@material-ui/icons';
+import LogInForm from '../components/login/LogInForm';
+import ResetPassForm from '../components/login/ResetPassForm';
 
 const PREFIX = 'nustPortalLogin';
 const classes = {
   formContent: `${PREFIX}-formContent`,
   root: `${PREFIX}-root`,
   avatar: `${PREFIX}-avatar`,
-  forgotPass: `${PREFIX}-forgotPass`,
-  img: `${PREFIX}-img`,
-  button: `${PREFIX}-button`,
   bunner: `${PREFIX}-bunner`,
-  erroText: `${PREFIX}-erroText`,
 };
 
 const Root = styled(Box)(({ theme }) => ({
@@ -39,26 +28,12 @@ const Root = styled(Box)(({ theme }) => ({
     width: '100%',
     height: 'auto',
   },
-  [`& .${classes.forgotPass}`]: {
-    textDecoration: 'none',
-    textTransform: 'capitalize',
-    fontSize: theme.typography.pxToRem(18),
-  },
   [`& .${classes.bunner}`]: {
     height: '100%',
     width: '65%',
     background:
       'url("https://www.nust.ac.zw/images/campuslife/open-door-carou.jpg") no-repeat',
     backgroundSize: 'cover',
-  },
-
-  [`& .${classes.button}`]: {
-    display: 'block',
-    width: theme.spacing(14),
-    margin: theme.spacing(2),
-  },
-  [`& .${classes.erroText}`]: {
-    visibility: 'hidden',
   },
   [`& .${classes.formContent}`]: {
     width: '35%',
@@ -76,9 +51,8 @@ const Root = styled(Box)(({ theme }) => ({
 }));
 
 const Login = ({ authenticate, flagError, removeErros }) => {
-  const { path, url } = useRouteMatch();
+  const { path } = useRouteMatch();
   const history = useHistory();
-  const [showPassword, setShowPassword] = React.useState(false);
   const [loginDetails, setLoginDetails] = React.useState({
     position: '',
     studentID: '',
@@ -91,123 +65,6 @@ const Login = ({ authenticate, flagError, removeErros }) => {
       authenticate(loginDetails, () => history.replace('/'));
     }
   };
-
-  React.useEffect(() => {}, [flagError]);
-
-  const handleChange = (event) => {
-    setLoginDetails({
-      ...loginDetails,
-      [event.target.name]: event.target.value,
-    });
-    return flagError && removeErros();
-  };
-
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
-
-  const ResetPassForm = () => (
-    <Box px={5}>
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <TextField size="small" fullWidth placeholder="Student Number" />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField size="small" fullWidth placeholder="National ID" />
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <TextField size="small" fullWidth placeholder="Date" />
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <TextField size="small" fullWidth placeholder="Month" />
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <TextField size="small" fullWidth placeholder="Year" />
-        </Grid>
-      </Grid>
-      <Box display="flex" pt={5} justifyContent="space-around" alignItems="center">
-        <Link to={url} className="a-cancel">
-          <Button
-            type="submit"
-            variant="contained"
-            size="large"
-            color="primary"
-            startIcon={<ArrowBack />}
-          >
-            Log In
-          </Button>
-        </Link>
-        <Button type="submit" variant="contained" size="large" color="primary">
-          Reset
-        </Button>
-      </Box>
-    </Box>
-  );
-  const LogInForm = () => (
-    <>
-      <Box px={3} width="80%">
-        <Box py={2} width="100%">
-          <TextField
-            type="text"
-            size="medium"
-            autoFocus
-            required
-            error={flagError}
-            value={loginDetails.studentID}
-            spellCheck="false"
-            fullWidth
-            name="studentID"
-            onChange={handleChange}
-            placeholder="Student Number"
-            variant="outlined"
-          />
-        </Box>
-        <Box py={2} width="100%">
-          <TextField
-            type={showPassword ? 'text' : 'password'}
-            size="medium"
-            autoFocus
-            required
-            error={flagError}
-            value={loginDetails.password}
-            spellCheck="false"
-            fullWidth
-            pattern="^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$"
-            name="password"
-            onChange={handleChange}
-            placeholder="Password"
-            variant="outlined"
-            InputProps={{
-              endAdornment: (
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={() => setShowPassword(!showPassword)}
-                  onMouseDown={handleMouseDownPassword}
-                  edge="end"
-                >
-                  {!showPassword ? <Visibility /> : <VisibilityOff />}
-                </IconButton>
-              ),
-            }}
-          />
-        </Box>
-      </Box>
-      <Box>
-        <Button
-          type="submit"
-          variant="contained"
-          size="large"
-          color="primary"
-          className={classes.button}
-        >
-          LOG IN
-        </Button>
-      </Box>
-      <Link className={classes.forgotPass} to={`${url}/reset-password`}>
-        Forgot Password
-      </Link>
-    </>
-  );
 
   return (
     <Root component="div" height="100%" className={classes.root}>
@@ -230,8 +87,20 @@ const Login = ({ authenticate, flagError, removeErros }) => {
           />
         </Box>
         <Switch>
-          <Route exact path={path} component={LogInForm} />
-          <Route path={`${path}/reset-password`} component={ResetPassForm} />
+          <Route
+            exact
+            path={path}
+            render={(props) => (
+              <LogInForm
+                {...props}
+                flagError={flagError}
+                setLoginDetails={setLoginDetails}
+                removeErros={removeErros}
+                loginDetails={loginDetails}
+              />
+            )}
+          />
+          <Route exact path={`${path}/reset-password`} component={ResetPassForm} />
         </Switch>
         <Box color="text.secondary" fontSize={14}>
           NUST © 2021. All Rights Reserved.

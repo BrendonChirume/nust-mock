@@ -1,9 +1,9 @@
 import actionTypes from './actionTypes';
 
 const initialCredentials = {
-  studentID: 'chirume',
+  studentID: 'n02019372m',
   position: 'pharmacist',
-  password: 'biwQi0-tizjip-zuvcis',
+  password: '211711948',
 };
 
 export function signIn(credentials, cb) {

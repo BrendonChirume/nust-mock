@@ -112,17 +112,17 @@ const BrowserDrawer = styled(MuiDrawer, {
 
 const drawerWidth = 250;
 const options = {
-  '/': 'Profile',
-  '/dashboard': 'Dashboard',
-  '/new-reg': 'New Registration',
-  '/continuous-asses': 'Continuous Assesment',
-  '/exam-results': 'Examination Results',
-  '/time-table': 'Time Table',
-  '/e-learning': 'E-learning',
-  '/library': 'Libray',
-  '/accomodation': 'Accomodation',
-  '/notices': 'Notices',
-  '/payments': 'Payments',
+  '/main': 'Dashboard',
+  '/main/profile': 'Profile',
+  '/main/new-reg': 'New Registration',
+  '/main/continuous-asses': 'Continuous Assesment',
+  '/main/exam-results': 'Examination Results',
+  '/main/time-table': 'Time Table',
+  '/main/e-learning': 'E-learning',
+  '/main/library': 'Libray',
+  '/main/accomodation': 'Accomodation',
+  '/main/notices': 'Notices',
+  '/main/payments': 'Payments',
 };
 
 const Main = (props) => {
@@ -204,7 +204,7 @@ const Main = (props) => {
         sx={{ height: '100%', width: '100%', flexGrow: 1, p: 2 }}
       >
         <Toolbar />
-        <MainRoutes />
+        <MainRoutes isMobile={isMobile} />
       </Box>
     </Box>
   );
