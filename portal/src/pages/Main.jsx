@@ -21,7 +21,7 @@ const openedMixin = (theme) => ({
   }),
   color: theme.palette.text.primary,
   backgroundColor:
-    theme.palette.mode === 'dark'
+    theme.palette.type === 'dark'
       ? theme.palette.background.appBar
       : theme.palette.background.paper,
   overflowX: 'hidden',
@@ -34,7 +34,7 @@ const closedMixin = (theme) => ({
   }),
   color: theme.palette.text.primary,
   backgroundColor:
-    theme.palette.mode === 'dark'
+    theme.palette.type === 'dark'
       ? theme.palette.background.appBar
       : theme.palette.background.paper,
   overflowX: 'hidden',
@@ -119,7 +119,7 @@ const options = {
   '/main/exam-results': 'Examination Results',
   '/main/time-table': 'Time Table',
   '/main/e-learning': 'E-learning',
-  '/main/library': 'Libray',
+  '/main/library': 'Library',
   '/main/accomodation': 'Accomodation',
   '/main/notices': 'Notices',
   '/main/payments': 'Payments',

@@ -17,12 +17,17 @@ export default function Notices() {
     <Timeline position="right" sx={{ px: 0 }}>
       <TimelineItem>
         <TimelineOppositeContent
-          sx={{ m: 'auto 0', maxWidth: { xs: 60, md: 150 } }}
+          sx={{
+            m: 'auto 0',
+            pr: { xs: 1, md: 2 },
+            pl: 0,
+            maxWidth: { xs: 60, md: 150 },
+          }}
           align="right"
           variant="body2"
           color="text.secondary"
         >
-          9:30 am
+          Wed, 14
         </TimelineOppositeContent>
         <TimelineSeparator>
           <TimelineConnector />
@@ -31,7 +36,7 @@ export default function Notices() {
           </TimelineDot>
           <TimelineConnector />
         </TimelineSeparator>
-        <TimelineContent sx={{ py: '12px', px: 2, mr: { md: 8 } }}>
+        <TimelineContent sx={{ py: '12px', px: { xs: 1, md: 2 }, mr: { md: 8 } }}>
           <NotyArticle severity="important" title="Fees">
             Students are required to have cleared their last semester&apos;s school
             fees before exams start!
@@ -40,11 +45,16 @@ export default function Notices() {
       </TimelineItem>
       <TimelineItem>
         <TimelineOppositeContent
-          sx={{ m: 'auto 0', maxWidth: { xs: 60, md: 150 } }}
+          sx={{
+            m: 'auto 0',
+            pr: { xs: 1, md: 2 },
+            pl: 0,
+            maxWidth: { xs: 60, md: 150 },
+          }}
           variant="body2"
           color="text.secondary"
         >
-          10:00 am
+          Thur, 15
         </TimelineOppositeContent>
         <TimelineSeparator>
           <TimelineConnector />
@@ -53,7 +63,7 @@ export default function Notices() {
           </TimelineDot>
           <TimelineConnector />
         </TimelineSeparator>
-        <TimelineContent sx={{ py: '12px', px: 2, mr: { md: 8 } }}>
+        <TimelineContent sx={{ py: '12px', px: { xs: 1, md: 2 }, mr: { md: 8 } }}>
           <NotyArticle severity="info" title="Library">
             Students are advised to return thier library books before last day of
             semester
@@ -62,11 +72,16 @@ export default function Notices() {
       </TimelineItem>
       <TimelineItem>
         <TimelineOppositeContent
-          sx={{ m: 'auto 0', maxWidth: { xs: 60, md: 150 } }}
+          sx={{
+            m: 'auto 0',
+            pr: { xs: 1, md: 2 },
+            pl: 0,
+            maxWidth: { xs: 60, md: 150 },
+          }}
           variant="body2"
           color="text.secondary"
         >
-          10:00 am
+          Thur, 15
         </TimelineOppositeContent>
         <TimelineSeparator>
           <TimelineConnector />
@@ -75,7 +90,7 @@ export default function Notices() {
           </TimelineDot>
           <TimelineConnector sx={{ bgcolor: 'secondary.main' }} />
         </TimelineSeparator>
-        <TimelineContent sx={{ py: '12px', px: 2, mr: { md: 8 } }}>
+        <TimelineContent sx={{ py: '12px', px: { xs: 1, md: 2 }, mr: { md: 8 } }}>
           <NotyArticle severity="general" title="Openning dates">
             Schools are opening on the 15th of September
           </NotyArticle>
@@ -83,11 +98,16 @@ export default function Notices() {
       </TimelineItem>
       <TimelineItem>
         <TimelineOppositeContent
-          sx={{ m: 'auto 0', maxWidth: { xs: 60, md: 150 } }}
+          sx={{
+            m: 'auto 0',
+            pr: { xs: 1, md: 2 },
+            pl: 0,
+            maxWidth: { xs: 60, md: 150 },
+          }}
           variant="body2"
           color="text.secondary"
         >
-          10:00 am
+          Thur, 15
         </TimelineOppositeContent>
         <TimelineSeparator>
           <TimelineConnector sx={{ bgcolor: 'secondary.main' }} />
@@ -96,7 +116,7 @@ export default function Notices() {
           </TimelineDot>
           <TimelineConnector />
         </TimelineSeparator>
-        <TimelineContent sx={{ py: '12px', px: 2, mr: { md: 8 } }}>
+        <TimelineContent sx={{ py: '12px', px: { xs: 1, md: 2 }, mr: { md: 8 } }}>
           <NotyArticle severity="info" title="Application for accomodation">
             Applcation for accomodation is now open
           </NotyArticle>

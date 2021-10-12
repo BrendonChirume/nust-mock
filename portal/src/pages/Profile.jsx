@@ -101,7 +101,7 @@ const Profile = (props) => {
       <TabPanel index={1}>
         <Course />
       </TabPanel>
-      <TabPanel index={2}>
+      <TabPanel index={3}>
         <Box
           component="form"
           boxShadow={2}

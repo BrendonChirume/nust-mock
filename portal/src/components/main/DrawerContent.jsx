@@ -131,7 +131,7 @@ const DrawerContent = ({ handlePageChange, handleSignOut, open, isMobile }) => {
       icon: History,
     },
     {
-      page: 'Libray',
+      page: 'Library',
       href: `${url}/library`,
       icon: LocalLibrary,
     },

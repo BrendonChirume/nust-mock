@@ -39,6 +39,9 @@ const NustStudentPortal = (props) => {
             paper: '#222b36',
           },
         },
+        typography: {
+          fontFamily: "'Poppins', 'Source Sans Pro', 'Source Sans Pro', sans-serif",
+        },
       }),
     [mode]
   );

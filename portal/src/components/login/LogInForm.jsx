@@ -20,16 +20,20 @@ const LogInForm = (props) => {
 
   return (
     <>
-      <Box px={3} width="80%">
+      <Box px={3} width="80%" sx={{ fontFamily: "'Roboto'" }}>
         <Box py={2} width="100%">
           <TextField
-            size="medium"
             required
+            size="small"
             error={flagError}
             value={loginDetails.studentID}
             spellCheck="false"
             fullWidth
-            inputProps={{ style: { textTransform: 'uppercase' } }}
+            sx={{
+              input: { textTransform: 'uppercase', fontFamily: 'inherit' },
+              'input::placeholder': { textTransform: 'capitalize' },
+            }}
+            inputProps={{}}
             name="studentID"
             onChange={handleChange}
             placeholder="Student Number"
@@ -39,8 +43,11 @@ const LogInForm = (props) => {
         <Box py={2} width="100%">
           <TextField
             type={showPassword ? 'text' : 'password'}
-            size="medium"
             required
+            size="small"
+            sx={{
+              input: { textTransform: 'uppercase', fontFamily: 'inherit' },
+            }}
             error={flagError}
             value={loginDetails.password}
             spellCheck="false"
